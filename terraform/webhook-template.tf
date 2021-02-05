@@ -1,17 +1,3 @@
-resource "random_string" "token1" {
-  length  = 20
-  special = false
-}
-
-resource "random_string" "token2" {
-  length  = 22
-  special = false
-}
-
-variable "runbook_name" {
-  description = "the name of the service"
-}
-
 resource "azurerm_template_deployment" "github_management_template" {
   name                = "${var.runbook_name}_webhook"
   resource_group_name = azurerm_resource_group.rg_github_membership.name
@@ -27,7 +13,7 @@ resource "azurerm_template_deployment" "github_management_template" {
         "apiVersion": "2015-10-31",
         "properties": {
             "isEnabled": true,
-            "uri": "https://${var.runbook_name}.webhook.uks.azure-automation.net/webhooks?token=${random_string.token1.result}%2b${random_string.token2.result}%3d",
+            "uri": "${local.fqdn}",
             "expiryTime": "2030-01-01T00:00:00.000+00:00",
             "parameters": {},
             "runbook": {
