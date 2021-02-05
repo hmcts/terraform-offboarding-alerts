@@ -7,7 +7,7 @@ trigger:
 - main
 
 parameters:
-  - name: myParam
+  - name: message
     type: string
     default: ""
 
@@ -15,7 +15,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
+- script: echo Hello, ${{ parameters.message }}!
   displayName: 'Run a one-line script'
 
 - script: |
