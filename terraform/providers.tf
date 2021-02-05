@@ -11,9 +11,3 @@ terraform {
 provider "azurerm" {
   features {}
 }
-
-# }
-# data "terraform_remote_state" "github_membership_management_storage" {
-#   backend = "azurerm"
-
-# }
