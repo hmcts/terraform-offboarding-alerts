@@ -13,7 +13,7 @@ resource "azurerm_template_deployment" "github_management_template" {
         "apiVersion": "2015-10-31",
         "properties": {
             "isEnabled": true,
-            "uri": "${local.fqdn}",
+            "uri": "${local.webhook_uri}",
             "expiryTime": "2030-01-01T00:00:00.000+00:00",
             "parameters": {},
             "runbook": {

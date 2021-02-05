@@ -9,9 +9,9 @@ resource "random_string" "token2" {
 }
 
 variable "runbook_name" {
-  description = "the name of the service"
+  description = "the name of the runbook"
 }
 
 locals {
-  fqdn = "https://${var.runbook_name}.webhook.uks.azure-automation.net/webhooks?token=${random_string.token1.result}%2b${random_string.token2.result}%3d"
+  webhook_uri = "https://${var.runbook_name}.webhook.uks.azure-automation.net/webhooks?token=${random_string.token1.result}%2b${random_string.token2.result}%3d"
 }
