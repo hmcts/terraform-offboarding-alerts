@@ -10,12 +10,14 @@ parameters:
   - name: message
     type: string
     default: ""
+  - name: payload
+    type: object
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, ${{ parameters.message }}!
+- script: echo Hello, ${{ parameters.payload }}!
   displayName: 'Run a one-line script'
 
 - script: |
