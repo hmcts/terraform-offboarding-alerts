@@ -12,7 +12,7 @@ resource "azurerm_automation_account" "github_membership_automation" {
 }
 
 resource "azurerm_automation_runbook" "github_membership_runbook" {
-  name                    = "${var.runbook_name}_runbook"
+  name                    = "${var.runbook_name}"
   location                = azurerm_resource_group.rg_github_membership.location
   resource_group_name     = azurerm_resource_group.rg_github_membership.name
   automation_account_name = azurerm_automation_account.github_membership_automation.name
