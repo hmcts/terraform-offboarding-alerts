@@ -15,7 +15,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert" "disabled_users_alert" {
   data_source_id = module.logworkspace.workspace_id
   description    = "Alert when at least one user account has been disabled"
   enabled        = true
-  # Count all requests with server error result code grouped into 5-minute bins
+
   query       = <<-QUERY
   requests
     | where OperationName  == "Disable account" 
