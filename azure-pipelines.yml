@@ -4,16 +4,95 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+- master
 
-pool:
-  vmImage: 'ubuntu-latest'
+variables:
+   terraformVersion: 0.14.4
+   timeoutInMinutes: 60
+   agentPool: 'ubuntu-18.04'
+   service_connection: 'DTS-CFTPTL-INTSVC'
+   storage_account_rg: 'core-infra-intsvc-rg'
+   storage_account_name: 'cftptlintsvc'
+   component: 'offboarding'
+   build: $(Build.BuildNumber)
+   action:
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+   - stage: Pipeline
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+     jobs:
+
+       - job: Pipeline
+         timeoutInMinutes: ${{ variables.timeoutInMinutes }}
+         pool:
+           vmImage: ${{ variables.agentPool }}
+
+         steps:
+
+          - task: TerraformInstaller@0
+            displayName: Terraform install
+            inputs:
+              terraformVersion: ${{ variables.terraformVersion }}
+
+          - task: AzureKeyVault@1
+            displayName: 'Get azure devops API token from Keyvault'
+            inputs:
+              runAsPreJob: false
+              ConnectedServiceName: 'DCD-CFT-Sandbox'
+              keyVaultName: 'infra-vault-sandbox'
+              secretsFilter: 'azure-devops-token'
+
+          - task: Bash@3
+            displayName: Prevent parallel run
+            env:
+              thisbuild: $(Build.BuildId)
+              pipelinedefinition: $(System.DefinitionId)
+              azuredevopstoken: $(azure-devops-token)
+            inputs:
+              filePath: $(System.DefaultWorkingDirectory)/pipeline-scripts/builds-check.sh
+
+
+          - task: AzureCLI@2
+            displayName: 'Unlock TF state if required'
+            condition: always()
+            inputs:
+              scriptType: bash
+              scriptLocation: scriptPath
+              azureSubscription: DTS-CFTPTL-INTSVC
+              scriptPath: $(System.DefaultWorkingDirectory)/pipeline-scripts/unlock-tf-state.sh
+              arguments: ${{ variables.component }} ${{ variables.storage_account_name }}
+
+          - task: TerraformCLI@0
+            displayName: Init - ${{ variables.component }}
+            inputs:
+              command: 'init'
+              backendType: 'azurerm'
+              backendServiceArm: '${{ variables.service_connection }}'
+              backendAzureRmResourceGroupName: '${{ variables.storage_account_rg }}'
+              backendAzureRmStorageAccountName: '${{ variables.storage_account_name }}'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: '${{ variables.component }}.tfstate'
+              workingDirectory: $(System.DefaultWorkingDirectory)/terraform
+
+          - task: TerraformCLI@0
+            displayName: terraform validate
+            inputs:
+              command: 'validate'
+              workingDirectory: $(System.DefaultWorkingDirectory)/terraform
+
+          - task: TerraformCLI@0
+            displayName: Plan - ${{ variables.component }}
+            inputs:
+              command: 'plan'
+              commandOptions: '-out=tfplan'
+              workingDirectory: $(System.DefaultWorkingDirectory)/terraform
+              environmentServiceName: '${{ variables.service_connection }}'
+
+          - task: TerraformCLI@0
+            displayName: Apply - ${{ variables.component }}
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            inputs:
+              commandOptions: tfplan
+              command: apply
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+              environmentServiceName: '${{ variables.service_connection }}'
