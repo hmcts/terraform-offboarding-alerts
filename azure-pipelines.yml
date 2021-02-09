@@ -17,6 +17,9 @@ variables:
    build: $(Build.BuildNumber)
    action:
 
+jobs:
+- job: Pipeline
+
 pool:
   vmImage: 'ubuntu-latest'
 
