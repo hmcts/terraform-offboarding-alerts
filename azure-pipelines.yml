@@ -27,6 +27,14 @@ steps:
   inputs:
     terraformVersion: ${{ variables.terraformVersion }}
 
+- task: AzureKeyVault@1
+  displayName: 'Get azure devops API token from Keyvault'
+  inputs:
+    runAsPreJob: false
+    ConnectedServiceName: 'DCD-CFT-Sandbox'
+    keyVaultName: 'infra-vault-sandbox'
+    secretsFilter: 'azure-devops-token'
+
 - task: Bash@3
   displayName: Prevent parallel run
   env:
