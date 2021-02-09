@@ -13,7 +13,7 @@ variables:
    service_connection: 'DTS-CFTPTL-INTSVC'
    storage_account_rg: 'core-infra-intsvc-rg'
    storage_account_name: 'cftptlintsvc'
-   component: 'terraform-github-management'
+   component: 'offboarding'
    build: $(Build.BuildNumber)
    action:
 
