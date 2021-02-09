@@ -1,7 +1,7 @@
 resource "azurerm_monitor_action_group" "github-membership-action-group" {
   name                = "DisabledUsersAlertsAction"
   resource_group_name = azurerm_resource_group.rg_github_membership.name
-  short_name          = "disabled_user"
+  short_name          = "disableduser"
 
   automation_runbook_receiver {
     name                    = "${var.runbook_name}_receiver"
