@@ -51,6 +51,17 @@ stages:
             inputs:
               filePath: $(System.DefaultWorkingDirectory)/pipeline-scripts/builds-check.sh
 
+
+          - task: AzureCLI@2
+            displayName: 'Unlock TF state if required'
+            condition: always()
+            inputs:
+              scriptType: bash
+              scriptLocation: scriptPath
+              azureSubscription: DTS-CFTPTL-INTSVC
+              scriptPath: $(System.DefaultWorkingDirectory)/pipeline-scripts/unlock-tf-state.sh
+              arguments: ${{ variables.component }} ${{ variables.storage_account_name }}
+
           - task: TerraformCLI@0
             displayName: Init - ${{ variables.component }}
             inputs:
