@@ -17,7 +17,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert" "disabled_users_alert" {
   enabled        = true
 
   query       = <<-QUERY
-  requests
+  AuditLogs
     | where OperationName  == "Disable account" 
     | project TargetResources[0].userPrincipalName
   QUERY
