@@ -22,7 +22,7 @@ resource "azurerm_automation_runbook" "github_membership_runbook" {
   runbook_type            = "PowerShell"
 
   publish_content_link {
-    uri = "https://raw.githubusercontent.com/hmcts/azure-automation-runbooks/DTSPO-440-create-offboarding-runbook/runbooks/Remove-User.ps1"
+    uri = "https://raw.githubusercontent.com/hmcts/azure-automation-runbooks/DTSPO-440-create-offboarding-runbook/runbooks/Remove-UserGitHubAccess.ps1"
   }
 }
 
