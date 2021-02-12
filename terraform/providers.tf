@@ -11,3 +11,12 @@ terraform {
 provider "azurerm" {
   features {}
 }
+
+provider "azuread" {
+}
+
+provider "azurerm" {
+  alias           = "keyvault"
+  subscription_id = "00b9a00a-20eb-4173-b7b6-468e00836a33"
+  features {}
+}

@@ -1,3 +1,16 @@
+data "azurerm_client_config" "current" {}
+
+data "azurerm_key_vault" "cert_key_vault" {
+  name                = var.cert_keyvault
+  resource_group_name = var.cert_keyvault_rg
+  provider            = azurerm.keyvault
+}
+
+data "azurerm_key_vault_secret" "runas_cert_secret" {
+  name         = azurerm_key_vault_certificate.automation_account_cert.name
+  key_vault_id = data.azurerm_key_vault.cert_key_vault.id
+}
+
 resource "azurerm_resource_group" "rg_github_membership" {
   name     = "github-membership-management"
   location = "Uk South"
@@ -45,5 +58,24 @@ resource "azurerm_automation_module" "az_keyvault_module" {
     uri = "https://devopsgallerystorage.blob.core.windows.net/packages/az.keyvault.4.0.2-preview.nupkg"
   }
   # This module cannot be imported unless the Accounts Module has been imported first
-  depends_on = [ azurerm_automation_module.az_accounts_module ]
+  depends_on = [azurerm_automation_module.az_accounts_module]
+}
+
+resource "azurerm_automation_certificate" "github_membership_runas_cert" {
+  name                    = "AzureRunAsCertificate"
+  resource_group_name     = azurerm_automation_account.github_membership_automation.resource_group_name
+  automation_account_name = azurerm_automation_account.github_membership_automation.name
+  base64                  = data.azurerm_key_vault_secret.runas_cert_secret.value
+
+}
+
+resource "azurerm_automation_connection_service_principal" "github_membership_runas_connection" {
+  name                    = "AzureRunAsConnection"
+  resource_group_name     = azurerm_automation_account.github_membership_automation.resource_group_name
+  automation_account_name = azurerm_automation_account.github_membership_automation.name
+  application_id          = data.azuread_service_principal.automation_account_sp.application_id
+  tenant_id               = data.azurerm_client_config.current.tenant_id
+  subscription_id         = data.azurerm_client_config.current.subscription_id
+  certificate_thumbprint  = azurerm_automation_certificate.github_membership_runas_cert.thumbprint
+
 }
