@@ -1,5 +1,4 @@
 resource "azurerm_key_vault_certificate" "automation_account_cert" {
-  provider     = azurerm.keyvault
   name         = local.cert_name
   key_vault_id = data.azurerm_key_vault.cert_key_vault.id
 
