@@ -1,12 +1,5 @@
-data "azuread_service_principal" "automation_account_sp" {
-  display_name = var.sp_display_name
-}
-
-data "azuread_application" "automation_account_app" {
-  display_name = var.sp_display_name
-}
-
 resource "azurerm_key_vault_certificate" "automation_account_cert" {
+  provider     = azurerm.keyvault
   name         = local.cert_name
   key_vault_id = data.azurerm_key_vault.cert_key_vault.id
 
@@ -52,19 +45,3 @@ resource "azurerm_key_vault_certificate" "automation_account_cert" {
   }
 }
 
-resource "azuread_application_certificate" "main" {
-  application_object_id = data.azuread_application.automation_account_app.object_id
-  type                  = "AsymmetricX509Cert"
-  encoding              = "hex"
-  value                 = azurerm_key_vault_certificate.automation_account_cert.certificate_data
-  end_date              = azurerm_key_vault_certificate.automation_account_cert.certificate_attribute[0].expires
-
-}
-
-resource "azuread_service_principal_certificate" "main" {
-  service_principal_id = data.azuread_service_principal.automation_account_sp.application_id
-  type                 = "AsymmetricX509Cert"
-  encoding             = "hex"
-  value                = azurerm_key_vault_certificate.automation_account_cert.certificate_data
-  end_date             = azurerm_key_vault_certificate.automation_account_cert.certificate_attribute[0].expires
-}
