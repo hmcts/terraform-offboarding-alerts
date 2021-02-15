@@ -1,4 +1,4 @@
-resource "azurerm_key_vault_certificate" "automation_account_cert" {
+resource "azurerm_key_vault_certificate" "automation_account" {
   name         = local.cert_name
   key_vault_id = data.azurerm_key_vault.cert_key_vault.id
 
@@ -38,7 +38,7 @@ resource "azurerm_key_vault_certificate" "automation_account_cert" {
         "keyEncipherment",
       ]
 
-      subject            = "CN=${azurerm_automation_account.github_membership_automation.name}-automation-account"
+      subject            = "CN={$local.cert_name}"
       validity_in_months = 12
     }
   }

@@ -6,7 +6,7 @@ data "azurerm_key_vault" "cert_key_vault" {
 }
 
 data "azurerm_key_vault_secret" "runas_cert_secret" {
-  name         = azurerm_key_vault_certificate.automation_account_cert.name
+  name         = azurerm_key_vault_certificate.automation_account.name
   key_vault_id = data.azurerm_key_vault.cert_key_vault.id
 }
 
