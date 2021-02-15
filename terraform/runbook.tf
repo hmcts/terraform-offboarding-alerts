@@ -9,7 +9,7 @@ data "azurerm_key_vault" "cert_key_vault" {
 data "azurerm_key_vault_secret" "runas_cert_secret" {
   name         = azurerm_key_vault_certificate.automation_account_cert.name
   key_vault_id = data.azurerm_key_vault.cert_key_vault.id
-  provider            = azurerm.keyvault
+  provider     = azurerm.keyvault
 }
 
 resource "azurerm_resource_group" "rg_github_membership" {

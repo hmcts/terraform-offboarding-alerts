@@ -14,7 +14,7 @@ resource "azuread_application_certificate" "automation_account" {
 resource "azuread_service_principal" "automation_account" {
   application_id = azuread_application.automation_account.application_id
 
-  depends_on = [ azuread_application_certificate.automation_account ]
+  depends_on = [azuread_application_certificate.automation_account]
 }
 
 resource "azuread_service_principal_certificate" "automation_account" {
