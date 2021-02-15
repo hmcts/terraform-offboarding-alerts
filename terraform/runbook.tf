@@ -9,6 +9,7 @@ data "azurerm_key_vault" "cert_key_vault" {
 data "azurerm_key_vault_secret" "runas_cert_secret" {
   name         = azurerm_key_vault_certificate.automation_account_cert.name
   key_vault_id = data.azurerm_key_vault.cert_key_vault.id
+  provider            = azurerm.keyvault
 }
 
 resource "azurerm_resource_group" "rg_github_membership" {
@@ -17,7 +18,7 @@ resource "azurerm_resource_group" "rg_github_membership" {
 }
 
 resource "azurerm_automation_account" "github_membership_automation" {
-  name                = "github-membership-automation"
+  name                = var.automation_account_name
   location            = azurerm_resource_group.rg_github_membership.location
   resource_group_name = azurerm_resource_group.rg_github_membership.name
 
@@ -73,7 +74,7 @@ resource "azurerm_automation_connection_service_principal" "github_membership_ru
   name                    = "AzureRunAsConnection"
   resource_group_name     = azurerm_automation_account.github_membership_automation.resource_group_name
   automation_account_name = azurerm_automation_account.github_membership_automation.name
-  application_id          = data.azuread_service_principal.automation_account_sp.application_id
+  application_id          = azuread_service_principal.automation_account.application_id
   tenant_id               = data.azurerm_client_config.current.tenant_id
   subscription_id         = data.azurerm_client_config.current.subscription_id
   certificate_thumbprint  = azurerm_automation_certificate.github_membership_runas_cert.thumbprint
