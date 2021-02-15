@@ -1,4 +1,4 @@
-runbook_name     = "github_management"
-sp_display_name  = "dcd_sp_ado_mgmt_operations_ad_v2"
+automation_account_name = "github-management"
+runbook_name     = "github-management"
 cert_keyvault    = "infra-cert-prod"
 cert_keyvault_rg = "infra-cert-prod"
