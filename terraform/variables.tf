@@ -8,12 +8,12 @@ resource "random_string" "token2" {
   special = false
 }
 
-variable "runbook_name" {
-  description = "the name of the runbook"
+variable "automation_account_name" {
+  description = "The name of the Automation Account"
 }
 
-variable "sp_display_name" {
-  description = "The display name of the service principal that the automation account will assume"
+variable "runbook_name" {
+  description = "the name of the runbook"
 }
 
 variable "cert_keyvault" {
