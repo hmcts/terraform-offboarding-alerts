@@ -28,7 +28,7 @@ resource "azuread_service_principal_certificate" "automation_account" {
 resource "azurerm_key_vault_access_policy" "automation_account" {
   key_vault_id = data.azurerm_key_vault.cert_key_vault.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
+  object_id    = azuread_service_principal.automation_account.object_id
 
   secret_permissions = [
     "get",
