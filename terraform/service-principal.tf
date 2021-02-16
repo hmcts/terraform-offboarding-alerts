@@ -25,8 +25,13 @@ resource "azuread_service_principal_certificate" "automation_account" {
   end_date             = azurerm_key_vault_certificate.automation_account.certificate_attribute[0].expires
 }
 
-resource "azurerm_role_assignment" "key_vault" {
-  scope                = data.azurerm_key_vault.cert_key_vault.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = azuread_service_principal.automation_account.object_id
+resource "azurerm_key_vault_access_policy" "automation_account" {
+  key_vault_id = data.azurerm_key_vault.cert_key_vault.id
+  tenant_id               = data.azurerm_client_config.current.tenant_id
+  subscription_id         = data.azurerm_client_config.current.subscription_id
+
+  secret_permissions = [
+    "get",
+    "list"
+  ]
 }
