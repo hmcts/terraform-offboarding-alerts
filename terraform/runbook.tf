@@ -54,7 +54,7 @@ resource "azurerm_automation_module" "az_keyvault_module" {
   automation_account_name = azurerm_automation_account.github_membership_automation.name
 
   module_link {
-    uri = "https://devopsgallerystorage.blob.core.windows.net/packages/az.keyvault.4.0.2-preview.nupkg"
+    uri = "https://devopsgallerystorage.blob.core.windows.net/packages/az.keyvault.3.3.1.nupkg"
   }
   # This module cannot be imported unless the Accounts Module has been imported first
   depends_on = [azurerm_automation_module.az_accounts_module]
