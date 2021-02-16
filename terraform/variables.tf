@@ -8,11 +8,18 @@ resource "random_string" "token2" {
   special = false
 }
 
+variable "automation_account_name" {
+  description = "The name of the Automation Account"
+}
+
 variable "runbook_name" {
   description = "the name of the runbook"
 }
 
-locals {
-  webhook_uri = "https://${var.runbook_name}.webhook.uks.azure-automation.net/webhooks?token=${random_string.token1.result}%2b${random_string.token2.result}%3d"
+variable "cert_keyvault" {
+  description = "name of the keyvault to store the TLS cert in"
 }
 
+variable "cert_keyvault_rg" {
+  description = "Resource group where the TLS cert will be stored"
+}
