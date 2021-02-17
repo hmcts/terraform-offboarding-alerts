@@ -13,6 +13,15 @@ provider "azurerm" {
   features {}
 }
 
+provider "azurerm" {
+  alias = "arm_template"
+  features {
+    template_deployment {
+      delete_nested_items_during_deletion = false
+    }
+  }
+}
+
 provider "azuread" {
 }
 

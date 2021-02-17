@@ -11,7 +11,7 @@ data "azurerm_key_vault_secret" "runas_cert_secret" {
 }
 
 resource "azurerm_resource_group" "rg_github_membership" {
-  name     = "github-membership-management"
+  name     = "user-offboarding"
   location = "Uk South"
 }
 

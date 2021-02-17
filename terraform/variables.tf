@@ -24,6 +24,6 @@ variable "cert_keyvault_rg" {
   description = "Resource group where the TLS cert will be stored"
 }
 
-variable "webhook_name" {
-  description = "Name of the runbook's webhook"
-}
+# variable "webhook_name" {
+#   description = "Name of the runbook's webhook"
+# }
