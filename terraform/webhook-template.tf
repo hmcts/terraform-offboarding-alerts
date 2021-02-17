@@ -8,7 +8,7 @@ resource "azurerm_resource_group_template_deployment" "github_management_templat
     "contentVersion": "1.0.0.0",
     "resources": [
         {
-        "name": "${azurerm_automation_account.github_membership_automation.name}/webhook",
+        "name": "${azurerm_automation_account.github_membership_automation.name}/${var.webhook_name}",
         "type": "Microsoft.Automation/automationAccounts/webhooks",
         "apiVersion": "2015-10-31",
         "properties": {

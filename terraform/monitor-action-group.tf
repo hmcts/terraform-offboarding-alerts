@@ -7,7 +7,7 @@ resource "azurerm_monitor_action_group" "github-membership-action-group" {
     name                    = "${var.runbook_name}_receiver"
     automation_account_id   = azurerm_automation_account.github_membership_automation.id
     runbook_name            = var.runbook_name
-    webhook_resource_id     = "${azurerm_automation_account.github_membership_automation.id}/webhooks/webhook_alert"
+    webhook_resource_id     = "${azurerm_automation_account.github_membership_automation.id}/webhooks/${var.webhook_name}"
     is_global_runbook       = true
     service_uri             = local.webhook_uri
     use_common_alert_schema = true
