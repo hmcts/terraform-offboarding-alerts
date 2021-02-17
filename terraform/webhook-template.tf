@@ -23,7 +23,7 @@ resource "random_string" "random" {
 }
 
 resource "azurerm_resource_group_template_deployment" "github_management_template" {
-  provider = azurerm.test
+  provider = azurerm.arm_template
   name                = "${var.runbook_name}_${random_string.random.result}"
   resource_group_name = azurerm_resource_group.rg_github_membership.name
   deployment_mode     = "Incremental"
