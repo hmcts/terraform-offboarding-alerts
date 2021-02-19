@@ -18,7 +18,6 @@ az keyvault secret set --vault-name ${data.azurerm_key_vault.main.name} --name $
 }
 
 resource "azurerm_resource_group_template_deployment" "main" {
-  #provider            = azurerm.arm_template
   name                = "${var.runbook_name}-webook"
   resource_group_name = azurerm_resource_group.main.name
   deployment_mode     = "Incremental"
