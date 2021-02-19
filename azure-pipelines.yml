@@ -74,7 +74,7 @@ stages:
               workingDirectory: $(System.DefaultWorkingDirectory)/terraform
 
           - task: TerraformCLI@0
-            displayName: terraform validate
+            displayName: Terraform validate
             inputs:
               command: 'validate'
               workingDirectory: $(System.DefaultWorkingDirectory)/terraform
@@ -88,7 +88,7 @@ stages:
               environmentServiceName: '${{ variables.service_connection }}'
 
           - task: AzureCLI@2
-            displayName: AzureServicePrincipalAuth
+            displayName: Set Az credentials as variables
             inputs:
               azureSubscription: '${{ variables.service_connection }}'
               scriptType: bash
