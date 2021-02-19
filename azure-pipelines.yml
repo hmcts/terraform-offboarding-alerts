@@ -90,7 +90,7 @@ stages:
           - task: AzureCLI@2
             displayName: AzureServicePrincipalAuth
             inputs:
-              azureSubscription: '${{ parameters.service_connection }}'
+              azureSubscription: '${{ variables.service_connection }}'
               scriptType: bash
               scriptLocation: inlineScript
               addSpnToEnvironment: true
