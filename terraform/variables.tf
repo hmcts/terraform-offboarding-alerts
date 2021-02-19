@@ -1,13 +1,3 @@
-resource "random_string" "token1" {
-  length  = 20
-  special = false
-}
-
-resource "random_string" "token2" {
-  length  = 22
-  special = false
-}
-
 variable "automation_account_name" {
   description = "The name of the Automation Account"
 }
