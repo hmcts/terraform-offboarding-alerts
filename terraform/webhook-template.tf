@@ -8,12 +8,8 @@ data "azurerm_key_vault_secret" "webhook_uri" {
 resource "null_resource" "generate_webhook_uri" {
   provisioner "local-exec" {
     command = <<COMMAND
-if [[ ! $(az account show ) ]]; then
-  if [[ ! -z $clientId ]]; then
+if [[ $clientId ]]; then
     az login --service-principal --username $clientId --password $secret --tenant $tenantId
-  else
-    echo "az login needed"
-  fi
 fi
 
 uri_api='https://management.azure.com/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.main.name}/providers/Microsoft.Automation/automationAccounts/${azurerm_automation_account.main.name}/webhooks/generateUri?api-version=2015-10-31'
