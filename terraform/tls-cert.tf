@@ -1,6 +1,6 @@
-resource "azurerm_key_vault_certificate" "automation_account" {
+resource "azurerm_key_vault_certificate" "main" {
   name         = local.cert_name
-  key_vault_id = data.azurerm_key_vault.cert_key_vault.id
+  key_vault_id = data.azurerm_key_vault.main.id
 
   certificate_policy {
     issuer_parameters {

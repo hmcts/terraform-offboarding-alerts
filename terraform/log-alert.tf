@@ -3,13 +3,13 @@ module "logworkspace" {
   environment = "prod"
 }
 
-resource "azurerm_monitor_scheduled_query_rules_alert" "disabled_users_alert" {
+resource "azurerm_monitor_scheduled_query_rules_alert" "main" {
   name                = "disabled_users_alert"
-  location            = azurerm_resource_group.rg_github_membership.location
-  resource_group_name = azurerm_resource_group.rg_github_membership.name
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
 
   action {
-    action_group = [azurerm_monitor_action_group.github-membership-action-group.id]
+    action_group = [azurerm_monitor_action_group.main.id]
   }
   data_source_id = module.logworkspace.workspace_id
   description    = "Alert when at least one user account has been disabled"
