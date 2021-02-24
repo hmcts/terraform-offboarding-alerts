@@ -1,15 +1,9 @@
-variable "automation_account_name" {
-  description = "The name of the Automation Account"
+variable "ado_org" {
+  description = "The name of the Azure devops org where the webhook has been created"
+  default = "hmcts"
 }
 
-variable "runbook_name" {
-  description = "the name of the runbook"
-}
+variable "webhook_name" {
+  description = "The name of the webhook to send the notification to"
 
-variable "cert_keyvault" {
-  description = "name of the keyvault to store the TLS cert in"
-}
-
-variable "cert_keyvault_rg" {
-  description = "Resource group where the TLS cert will be stored"
 }
