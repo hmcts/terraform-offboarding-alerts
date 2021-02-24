@@ -1,6 +1,6 @@
 variable "ado_org" {
   description = "The name of the Azure devops org where the webhook has been created"
-  default = "hmcts"
+  default     = "hmcts"
 }
 
 variable "webhook_name" {
