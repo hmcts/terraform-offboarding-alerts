@@ -15,7 +15,7 @@ resource "azurerm_monitor_action_group" "main" {
   webhook_receiver {
     name                    = "Azure Devops - ${var.webhook_name}"
     service_uri             = local.webhook_uri
-    use_common_alert_schema = true
+    use_common_alert_schema = false
   }
 
 }
