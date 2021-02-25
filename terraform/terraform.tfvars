@@ -1,1 +1,1 @@
-webhook_name = "USER-OFFBOARDING-WEBHOOK"
+webhook_name = "userOffboardingWebhook"

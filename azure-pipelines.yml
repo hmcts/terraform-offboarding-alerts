@@ -10,7 +10,7 @@ variables:
    terraformVersion: 0.14.4
    timeoutInMinutes: 60
    agentPool: 'ubuntu-18.04'
-   service_connection: 'DTS-CFTPTL-INTSVC'
+   service_connection: 'GA' #'DTS-CFTPTL-INTSVC'
    storage_account_rg: 'core-infra-intsvc-rg'
    storage_account_name: 'cftptlintsvc'
    component: 'offboarding'
