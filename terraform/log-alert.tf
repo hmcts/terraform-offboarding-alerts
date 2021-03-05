@@ -10,7 +10,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert" "main" {
 
   action {
     action_group           = [azurerm_monitor_action_group.main.id]
-    custom_webhook_payload = "{ \"IncludeSearchResults\": true }"
+    custom_webhook_payload = "{ \"IncludeSearchResults\": true, \"job\":\"user-offboarding\" }"
   }
   data_source_id = module.logworkspace.workspace_id
   description    = "Alert when at least one user account has been disabled"
