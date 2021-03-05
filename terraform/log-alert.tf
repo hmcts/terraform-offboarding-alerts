@@ -3,6 +3,21 @@ module "logworkspace" {
   environment = "prod"
 }
 
+data "azurerm_key_vault" "main" {
+  name                = "cftptl-intsvc"
+  resource_group_name = "core-infra-intsvc-rg"
+}
+
+resource "random_string" "random" {
+  length           = 12
+}
+
+resource "azurerm_key_vault_secret" "main" {
+  name         = "user-offboarding-webhook-filter"
+  value        = "user-offboarding-${random_string.random.result}"
+  key_vault_id = data.azurerm_key_vault.main.id
+}
+
 resource "azurerm_monitor_scheduled_query_rules_alert" "main" {
   name                = "disabled_users_alert"
   location            = azurerm_resource_group.main.location
@@ -10,7 +25,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert" "main" {
 
   action {
     action_group           = [azurerm_monitor_action_group.main.id]
-    custom_webhook_payload = "{ \"IncludeSearchResults\": true, \"job\":\"user-offboarding\" }"
+    custom_webhook_payload = "{ \"IncludeSearchResults\": true, \"job\":\"${azurerm_key_vault_secret.main.value}\" }"
   }
   data_source_id = module.logworkspace.workspace_id
   description    = "Alert when at least one user account has been disabled"
