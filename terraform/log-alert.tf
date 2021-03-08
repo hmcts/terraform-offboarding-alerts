@@ -9,12 +9,15 @@ data "azurerm_key_vault" "main" {
 }
 
 resource "random_string" "random" {
-  length           = 12
+  count = 3
+  length   = 6
+  special  = false
 }
 
+
 resource "azurerm_key_vault_secret" "main" {
-  name         = "user-offboarding-webhook-filter"
-  value        = "user-offboarding-${random_string.random.result}"
+  name         = "user-offboarding-webhook-token"
+  value        = "${random_string.random[0].result}-${random_string.random[1].result}-${random_string.random[2].result}"
   key_vault_id = data.azurerm_key_vault.main.id
 }
 
@@ -25,7 +28,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert" "main" {
 
   action {
     action_group           = [azurerm_monitor_action_group.main.id]
-    custom_webhook_payload = "{ \"IncludeSearchResults\": true, \"job\":\"${azurerm_key_vault_secret.main.value}\" }"
+    custom_webhook_payload = "{ \"IncludeSearchResults\": true, \"token\":\"${azurerm_key_vault_secret.main.value}\" }"
   }
   data_source_id = module.logworkspace.workspace_id
   description    = "Alert when at least one user account has been disabled"
