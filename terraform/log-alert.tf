@@ -9,9 +9,9 @@ data "azurerm_key_vault" "main" {
 }
 
 resource "random_string" "random" {
-  count = 3
-  length   = 6
-  special  = false
+  count   = 3
+  length  = 6
+  special = false
 }
 
 
