@@ -8,7 +8,7 @@ data "azurerm_key_vault" "main" {
   resource_group_name = "core-infra-intsvc-rg"
 }
 
-resource "random_string" "random" {
+resource "random_password" "random" {
   count   = 3
   length  = 6
   special = false
@@ -17,7 +17,7 @@ resource "random_string" "random" {
 
 resource "azurerm_key_vault_secret" "main" {
   name         = "user-offboarding-token"
-  value        = "${random_string.random[0].result}-${random_string.random[1].result}-${random_string.random[2].result}"
+  value        = "${random_password.random[0].result}-${random_password.random[1].result}-${random_password.random[2].result}"
   key_vault_id = data.azurerm_key_vault.main.id
 }
 
