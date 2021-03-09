@@ -16,7 +16,7 @@ resource "random_string" "random" {
 
 
 resource "azurerm_key_vault_secret" "main" {
-  name         = "user-offboarding-webhook-token"
+  name         = "user-offboarding-token"
   value        = "${random_string.random[0].result}-${random_string.random[1].result}-${random_string.random[2].result}"
   key_vault_id = data.azurerm_key_vault.main.id
 }
