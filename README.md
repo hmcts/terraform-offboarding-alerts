@@ -1,1 +1,1 @@
-# terraform-github-management
+# terraform-offboarding-alerts
