@@ -16,4 +16,4 @@ Any pipeline with access to the service connection can consume this alert, the c
 Shows the flow for offboarding users from GitHub, other flows are very similar:
 ![FlowChart](images/offboarduser.png)
 
-[source file](https://github.com/hmcts/terraform-offboarding-alerts/images/offboarduser.xml), created with https://draw.io.
+[source file](https://github.com/hmcts/terraform-offboarding-alerts/images/offboarduser.xml), created with https://app.diagrams.net.
