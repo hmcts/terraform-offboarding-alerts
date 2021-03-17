@@ -12,4 +12,6 @@ Any pipeline with access to the service connection can consume this alert, the c
  - https://github.com/hmcts/launchdarkly-terraform/blob/master/azure-pipelines-launchdarkly-offboard.yml
 
 ## Diagram
+
+Shows the flow for offboarding users from GitHub, other flows are very similar:
 ![FlowChart](images/offboarduser.png)
