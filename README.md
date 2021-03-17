@@ -8,7 +8,8 @@ Action Group points to Azure Devops using webhook endpoint. This enables us to c
 ## Pipelines
 
 Any pipeline with access to the service connection can consume this alert, the current pipelines are:
-https://github.com/hmcts/github-management/blob/main/azure-pipelines-offboard.yml
+ - https://github.com/hmcts/github-management/blob/main/azure-pipelines-offboard.yml
+ - https://github.com/hmcts/launchdarkly-terraform/blob/master/azure-pipelines-launchdarkly-offboard.yml
 
 ## Diagram
 ![FlowChart](images/offboarduser.png)
