@@ -4,7 +4,7 @@ This repository provisions an alert rule and action group resources which monito
 ## Alert rule
 Alert monitors hmcts-prod log analytics workspace at regular intervals by running a query against Auditlogs searching for "Disable Account".
 ## Action Group
-Action Group points to Azure Devops using webhook endpoint. This enables us to create a service connection[userOffboardingWebhook] of type 'incoming webhook' in Azure Devops.
+Action Group points to Azure Devops using webhook endpoint. This enables us to create a service connection (called '[userOffboardingWebhook](https://dev.azure.com/hmcts/PlatformOperations/_settings/adminservices?resourceId=e60677d0-66c4-4337-869b-5f5ad503d7c8)') of type 'incoming webhook' in Azure Devops.
 ## Pipelines
 
 Any pipeline with access to the service connection can consume this alert, the current pipelines are:
