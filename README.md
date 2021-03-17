@@ -7,4 +7,4 @@ Alert monitors hmcts-prod log analytics workspace at regular intervals by runnin
 Action Group points to Azure Devops using webhook endpoint. This enables us to create a service connection of type 'incoming webhook' in Azure Devops.
 
 ## Diagram
-!(images/offboardingAlert.svg)
+![FlowChart](images/offboardingAlert.svg)
