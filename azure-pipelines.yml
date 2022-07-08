@@ -86,6 +86,7 @@ stages:
               commandOptions: '-out=tfplan'
               workingDirectory: $(System.DefaultWorkingDirectory)/terraform
               environmentServiceName: '${{ variables.service_connection }}'
+              publishPlanResults: $(System.StageDisplayName)
 
           - task: AzureCLI@2
             displayName: Set Az credentials as variables
