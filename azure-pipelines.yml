@@ -85,7 +85,7 @@ stages:
               command: 'plan'
               commandOptions: '-out=tfplan'
               workingDirectory: $(System.DefaultWorkingDirectory)/terraform
-              serviceConnection: '${{ variables.service_connection }}'
+              environmentServiceName: '${{ variables.service_connection }}'
               publishPlanResults: $(System.StageDisplayName)
 
           - task: AzureCLI@2
