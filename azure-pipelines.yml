@@ -40,7 +40,7 @@ stages:
               runAsPreJob: false
               ConnectedServiceName: 'DCD-CFT-Sandbox'
               keyVaultName: 'infra-vault-sandbox'
-              secretsFilter: 'azure-devops-token'
+              secretsFilter: 'azure-devops-sp-token'
 
           - task: Bash@3
             displayName: Prevent parallel run
