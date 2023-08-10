@@ -68,8 +68,8 @@ stages:
               serviceConnection: 'DCD-CFT-Sandbox'
               overrideAction: ${{ parameters.overrideAction }}
 
-  - stage: ${{ parameter.environment }}_${{ parameter.deployment }}
-    displayName: ${{ parameter.environment }}_${{ parameter.deployment }}
+  - stage: ${{ parameter.env }}_${{ parameter.deployment }}
+    displayName: ${{ parameter.env }}_${{ parameter.deployment }}
     dependsOn: ${{ parameter.dependsOn }}
     jobs:
      - job:
