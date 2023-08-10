@@ -73,9 +73,9 @@ stages:
     dependsOn: ${{ parameter.dependsOn }}
     jobs:
      - job:
-        pool:
+       pool:
           vmImage: ${{ variables.agentPool }}
-        steps:
+       steps:
           - template: pipeline-templates/terraform.yaml
             parameters:
               environment: ${{ parameters.env }}
