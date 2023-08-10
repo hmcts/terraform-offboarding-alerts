@@ -31,6 +31,19 @@ parameters:
       - apply
       - destroy
 
+  - name: env
+    displayName: Environment
+    type: string
+    default: 'sbox'
+  
+  - name: location
+    displayName: Location
+    type: string
+    default: 'UK South'
+    values:
+    - 'UK South'
+    - 'UK West'
+
 
 variables:
    timeoutInMinutes: 60
@@ -55,19 +68,19 @@ stages:
               serviceConnection: 'DCD-CFT-Sandbox'
               overrideAction: ${{ parameters.overrideAction }}
 
-       - stage: ${{ parameter.environment }}_${{ parameter.deployment }}
-        displayName: ${{ parameter.environment }}_${{ parameter.deployment }}
-        dependsOn: ${{ parameter.dependsOn }}
-        jobs:
-          - job:
-            pool:
-              vmImage: ${{ variables.agentPool }}
-            steps:
-              - template: pipeline-templates/terraform.yaml
-                parameters:
-                  environment: ${{ parameter.environment }}
-                  overrideAction: ${{ parameters.overrideAction }}
-                  component: "offboarding-alerts"
-                  tfVarsFile: NULL
-                  terraformInitSubscription: ${{ variables.terraformInitSubscription }}
-                  serviceConnection: $(service_connection)
+  - stage: ${{ parameter.environment }}_${{ parameter.deployment }}
+    displayName: ${{ parameter.environment }}_${{ parameter.deployment }}
+    dependsOn: ${{ parameter.dependsOn }}
+    jobs:
+     - job:
+        pool:
+          vmImage: ${{ variables.agentPool }}
+         steps:
+          - template: pipeline-templates/terraform.yaml
+            parameters:
+              environment: ${{ parameters.env }}
+              overrideAction: ${{ parameters.overrideAction }}
+              component: "offboarding-alerts"
+              tfVarsFile: NULL
+              terraformInitSubscription: ${{ variables.terraformInitSubscription }}
+              serviceConnection: $(service_connection)
