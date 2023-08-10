@@ -6,111 +6,68 @@
 trigger:
 - master
 
+resources:
+  repositories:
+  - repository: cnp-azuredevops-libraries
+    type: github
+    ref: refs/heads/master
+    name: hmcts/cnp-azuredevops-libraries
+    endpoint: 'hmcts'
+
+parameters:
+  - name: action
+    displayName: Action
+    type: string
+    default: plan
+    values:
+      - plan
+      - apply
+
+  - name: overrideAction
+    type: string
+    default: plan
+    values:
+      - plan
+      - apply
+      - destroy
+
+
 variables:
-   terraformVersion: 0.14.4
    timeoutInMinutes: 60
    agentPool: 'ubuntu-20.04'
    service_connection: 'DTS-CFTPTL-INTSVC'
    storage_account_rg: 'core-infra-intsvc-rg'
    storage_account_name: 'cftptlintsvc'
-   component: 'offboarding'
    build: $(Build.BuildNumber)
+   terraformInitSubscription: 04d27a32-7a07-48b3-95b8-3c8691e1a263
    action:
 
 stages:
-   - stage: Pipeline
+  - stage: Precheck
+    jobs:
+      - job:
+        timeoutInMinutes: ${{ variables.timeoutInMinutes }}
+        steps:
+          - template: steps/terraform-precheck.yaml@cnp-azuredevops-libraries
+            parameters:
+              keyvaultName: 'infra-vault-Sandbox'
+              keyvaultSecret: 'azure-devops-sp-token'
+              serviceConnection: 'DCD-CFT-Sandbox'
+              overrideAction: ${{ parameters.overrideAction }}
 
-     jobs:
-
-       - job: Pipeline
-         timeoutInMinutes: ${{ variables.timeoutInMinutes }}
-         pool:
-           vmImage: ${{ variables.agentPool }}
-
-         steps:
-
-          - task: TerraformInstaller@0
-            displayName: Terraform install
-            inputs:
-              terraformVersion: ${{ variables.terraformVersion }}
-
-          - task: AzureKeyVault@1
-            displayName: 'Get azure devops API token from Keyvault'
-            inputs:
-              runAsPreJob: false
-              ConnectedServiceName: 'DCD-CFT-Sandbox'
-              keyVaultName: 'infra-vault-sandbox'
-              secretsFilter: 'azure-devops-sp-token'
-
-          - task: Bash@3
-            displayName: Prevent parallel run
-            env:
-              thisbuild: $(Build.BuildId)
-              pipelinedefinition: $(System.DefinitionId)
-              azuredevopstoken: $(azure-devops-token)
-            inputs:
-              filePath: $(System.DefaultWorkingDirectory)/pipeline-scripts/builds-check.sh
-
-          - task: AzureCLI@2
-            displayName: 'Unlock TF state if required'
-            condition: always()
-            inputs:
-              scriptType: bash
-              scriptLocation: scriptPath
-              azureSubscription: DTS-CFTPTL-INTSVC
-              scriptPath: $(System.DefaultWorkingDirectory)/pipeline-scripts/unlock-tf-state.sh
-              arguments: ${{ variables.component }} ${{ variables.storage_account_name }}
-
-          - task: TerraformCLI@0
-            displayName: Init - ${{ variables.component }}
-            inputs:
-              command: 'init'
-              backendType: 'azurerm'
-              backendServiceArm: '${{ variables.service_connection }}'
-              backendAzureRmResourceGroupName: '${{ variables.storage_account_rg }}'
-              backendAzureRmStorageAccountName: '${{ variables.storage_account_name }}'
-              backendAzureRmContainerName: 'tfstate'
-              backendAzureRmKey: '${{ variables.component }}.tfstate'
-              workingDirectory: $(System.DefaultWorkingDirectory)/terraform
-
-          - task: TerraformCLI@0
-            displayName: Terraform validate
-            inputs:
-              command: 'validate'
-              workingDirectory: $(System.DefaultWorkingDirectory)/terraform
-
-          - task: TerraformCLI@0
-            displayName: Plan - ${{ variables.component }}
-            inputs:
-              command: 'plan'
-              commandOptions: '-out=tfplan'
-              workingDirectory: $(System.DefaultWorkingDirectory)/terraform
-              environmentServiceName: '${{ variables.service_connection }}'
-              publishPlanResults: $(System.StageDisplayName)
-
-          - task: AzureCLI@2
-            displayName: Set Az credentials as variables
-            inputs:
-              azureSubscription: '${{ variables.service_connection }}'
-              scriptType: bash
-              scriptLocation: inlineScript
-              addSpnToEnvironment: true
-              inlineScript: |
-                #!/bin/bash
-                set -e
-                echo "##vso[task.setvariable variable=ServicePrincipalId;]$servicePrincipalId"
-                echo "##vso[task.setvariable variable=ServicePrincipalKey;]$servicePrincipalKey"
-                echo "##vso[task.setvariable variable=TenantId;]$tenantId"
-
-          - task: TerraformCLI@0
-            displayName: Apply - ${{ variables.component }}
-            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-            inputs:
-              commandOptions: tfplan
-              command: apply
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-              environmentServiceName: '${{ variables.service_connection }}'
-            env:
-              tenantId : $(TenantId)
-              clientId : $(ServicePrincipalId)
-              secret : $(ServicePrincipalKey)
+       - stage: ${{ parameter.environment }}_${{ parameter.deployment }}
+        displayName: ${{ parameter.environment }}_${{ parameter.deployment }}
+        dependsOn: ${{ parameter.dependsOn }}
+        jobs:
+          - job:
+            pool:
+              vmImage: ${{ variables.agentPool }}
+            steps:
+              - template: pipeline-templates/terraform.yaml
+                parameters:
+                  environment: ${{ parameter.environment }}
+                  overrideAction: ${{ parameters.overrideAction }}
+                  component: "offboarding-alerts"
+                  tfVarsFile: NULL
+                  terraformInitSubscription: ${{ variables.terraformInitSubscription }}
+                  serviceConnection: $(service_connection)
