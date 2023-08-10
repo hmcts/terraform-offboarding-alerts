@@ -32,8 +32,8 @@ parameters:
       - destroy
 
   - name: env
-    displayName: Environment
-    type: string
+    environment: 'sbox'
+    dependsOn: 'Precheck'
     default: 'sbox'
   
   - name: location
@@ -68,9 +68,9 @@ stages:
               serviceConnection: 'DCD-CFT-Sandbox'
               overrideAction: ${{ parameters.overrideAction }}
 
-  - stage: ${{ parameter.env }}_${{ parameter.deployment }}
-    displayName: ${{ parameter.env }}_${{ parameter.deployment }}
-    dependsOn: ${{ parameter.dependsOn }}
+  - stage: Terraform
+    displayName: terraform
+    dependsOn: Precheck
     jobs:
      - job:
        pool:
