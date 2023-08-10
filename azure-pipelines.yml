@@ -32,8 +32,6 @@ parameters:
       - destroy
 
   - name: env
-    environment: 'sbox'
-    dependsOn: 'Precheck'
     default: 'sbox'
   
   - name: location
