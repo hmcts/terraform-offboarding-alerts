@@ -9,7 +9,7 @@ trigger:
 variables:
    terraformVersion: 0.14.4
    timeoutInMinutes: 60
-   agentPool: 'ubuntu-18.04'
+   agentPool: 'ubuntu-latest'
    service_connection: 'DTS-CFTPTL-INTSVC'
    storage_account_rg: 'core-infra-intsvc-rg'
    storage_account_name: 'cftptlintsvc'
@@ -29,7 +29,7 @@ stages:
 
          steps:
 
-          - task: TerraformInstaller@0
+          - task: TerraformInstaller@2
             displayName: Terraform install
             inputs:
               terraformVersion: ${{ variables.terraformVersion }}
@@ -61,7 +61,7 @@ stages:
               scriptPath: $(System.DefaultWorkingDirectory)/pipeline-scripts/unlock-tf-state.sh
               arguments: ${{ variables.component }} ${{ variables.storage_account_name }}
 
-          - task: TerraformCLI@0
+          - task: TerraformCLI@2
             displayName: Init - ${{ variables.component }}
             inputs:
               command: 'init'
@@ -73,13 +73,13 @@ stages:
               backendAzureRmKey: '${{ variables.component }}.tfstate'
               workingDirectory: $(System.DefaultWorkingDirectory)/terraform
 
-          - task: TerraformCLI@0
+          - task: TerraformCLI@2
             displayName: Terraform validate
             inputs:
               command: 'validate'
               workingDirectory: $(System.DefaultWorkingDirectory)/terraform
 
-          - task: TerraformCLI@0
+          - task: TerraformCLI@2
             displayName: Plan - ${{ variables.component }}
             inputs:
               command: 'plan'
@@ -102,7 +102,7 @@ stages:
                 echo "##vso[task.setvariable variable=ServicePrincipalKey;]$servicePrincipalKey"
                 echo "##vso[task.setvariable variable=TenantId;]$tenantId"
 
-          - task: TerraformCLI@0
+          - task: TerraformCLI@2
             displayName: Apply - ${{ variables.component }}
             condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
             inputs:
